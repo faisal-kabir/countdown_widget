@@ -30,6 +30,11 @@ class CountDownController {
     throw UnimplementedError('Restart callback is not implement yet !');
   };
 
+  // ignore: prefer_function_declarations_over_variables
+  VoidCallback _start = () {
+    throw UnimplementedError('Start callback is not implement yet !');
+  };
+
   /// pause timer, if timer is paused => do nothing
   VoidCallback get pause => _pause;
 
@@ -38,6 +43,9 @@ class CountDownController {
 
   /// restart timer doesn't care about its state
   VoidCallback get restart => _restart;
+
+  /// restart timer doesn't care about its state
+  VoidCallback get start => _start;
 
   void _addPauseCallback(VoidCallback onPause) {
     _pause = onPause;
@@ -49,6 +57,10 @@ class CountDownController {
 
   void _addRestartCallback(VoidCallback onRestart) {
     _restart = onRestart;
+  }
+
+  void _addStartCallback(VoidCallback onStart) {
+    _start = onStart;
   }
 }
 
@@ -157,6 +169,7 @@ class _CountDownWidgetState extends State<CountDownWidget> with WidgetsBindingOb
   DateTime? _expiredTime;
   Duration? _durationRemain;
   bool _isPause = false;
+  bool _isStart = false;
   CountDownController _countDownTimerController = CountDownController();
   final Mutex _mutex = Mutex();
 
@@ -178,6 +191,7 @@ class _CountDownWidgetState extends State<CountDownWidget> with WidgetsBindingOb
   }
 
   void _setupController() {
+    _initStartCallback();
     _initPauseCallback();
     _initResumeCallback();
     _initRestartCallback();
@@ -191,6 +205,18 @@ class _CountDownWidgetState extends State<CountDownWidget> with WidgetsBindingOb
       }
       _isPause = false;
       _restartTimer();
+    });
+  }
+
+  void _initStartCallback() {
+    _countDownTimerController._addStartCallback(() {
+      if (!mounted) {
+        return;
+      }
+      _isStart = true;
+      _computeTime();
+      changeState();
+      _startTimer();
     });
   }
 
