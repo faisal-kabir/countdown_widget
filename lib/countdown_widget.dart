@@ -332,11 +332,11 @@ class _CountDownWidgetState extends State<CountDownWidget> with WidgetsBindingOb
       return;
     }
     if (state == AppLifecycleState.paused) {
-      if (_timer!.isActive) {
+      if (_timer!=null && _timer!.isActive) {
         _timer!.cancel();
       }
     } else if (state == AppLifecycleState.resumed) {
-      if (!_timer!.isActive && !_isPause) {
+      if (_timer!=null && !_timer!.isActive && !_isPause) {
         // only startTimer when current state is running,
         // if current state is pause, do nothing
         _startTimer();
