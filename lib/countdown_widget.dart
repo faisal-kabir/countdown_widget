@@ -173,6 +173,10 @@ class _CountDownWidgetState extends State<CountDownWidget> with WidgetsBindingOb
     }
   }
 
+  changeState(){
+    if(mounted) setState((){});
+  }
+
   void _setupController() {
     _initPauseCallback();
     _initResumeCallback();
@@ -262,7 +266,7 @@ class _CountDownWidgetState extends State<CountDownWidget> with WidgetsBindingOb
 
     widget.onDurationRemainChanged?.call(_durationRemain!);
 
-    setState(() {});
+    changeState();
   }
 
   void _restartTimer() {
@@ -270,7 +274,7 @@ class _CountDownWidgetState extends State<CountDownWidget> with WidgetsBindingOb
       _timer!.cancel();
     }
     _computeTime();
-    setState(() {});
+    changeState();
     _startTimer();
   }
 
